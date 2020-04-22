@@ -52,3 +52,21 @@
 - Statement
 - Structure
 - Program
+
+## Aton 拆解
+* Grammar
+  * Literal
+  * Variable
+  * Keywords
+  * WhiteSpace
+  * LineTermintor
+* Runtime
+  * Types
+    * String 
+	* Number 
+	* Undefined 
+	* Null 
+	* Boolean
+	* Object 
+	* Symbol 
+  * Execution Context
