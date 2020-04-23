@@ -5,8 +5,8 @@
 function testNumber(str="") {
     var decimalIntegerLiteral = '(0|[1-9][0-9]*)';
     var decimalDigitals = '([0-9]+)';
-    var exponentPart =`([e|E](${decimalDigitals}|[+]${decimalDigitals}|[-]${decimalDigitals}))`;
-    var decimalRegStr = `(${decimalIntegerLiteral}[.]${decimalDigitals}?${exponentPart}*)|([.]${decimalDigitals}?${exponentPart}?)|(${decimalIntegerLiteral}${exponentPart}*)`;
+    var exponentPart =`([e|E](${decimalDigitals}|\\+${decimalDigitals}|\\-${decimalDigitals}))`;
+    var decimalRegStr = `((${decimalIntegerLiteral}\\.${decimalDigitals}?${exponentPart}*)|(\\.${decimalDigitals}${exponentPart}?)|(${decimalIntegerLiteral}${exponentPart}*))`;
     var isDecimalReg = new RegExp('^'+decimalRegStr+'$')
     var isBinaryReg = /^0[b|B][0-1]+$/;
     var isOctalReg = /^0[o|O][0-7]+$/;
