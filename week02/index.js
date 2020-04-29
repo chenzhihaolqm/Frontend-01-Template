@@ -22,7 +22,7 @@ function testNumber(str="") {
 *    0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx
 *    0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
 */
-function UTF8_Encoding(str = ' ') {
+function UTF8_Encoding(str = ' ', isHex) {
     let retVal;
     const codeVal = str.codePointAt() || 0;
 	const step = [{
@@ -49,6 +49,12 @@ function UTF8_Encoding(str = ' ') {
             });
 	        break;
         }
+    }
+	if(isHex) {
+        const m = retVal.split(/\s/).map(item => {
+            return parseInt(item, 2).toString(16)
+        })
+	    return m.join(" ");
     }
 	return retVal;
 }
