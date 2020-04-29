@@ -59,9 +59,9 @@
 	* LexicalDeclaration    
 * Runtime
   * Completion Record
-    * [type]: normal break continue return throw
-	* [value]: types
-	* [target]: label
+    * [[type]]: normal break continue return throw
+	* [[value]]: types
+	* [[target]]: label
   * Lexical Environment
 ## 对象
 * 实现
