@@ -34,29 +34,29 @@
 ## Aton 拆解
 * Grammar
   * 简单语句
-    *Expression Statement (c = a + b)
-	*EmptyStatement (;)
-	*DebuggerStatement (debugger)
-	*ThrowStatement (throw)
-	*ContinueStatement 
-	*BreakStatement
-	*ReturnStatement 
+    * Expression Statement (c = a + b)
+	* EmptyStatement (;)
+	* DebuggerStatement (debugger)
+	* ThrowStatement (throw)
+	* ContinueStatement 
+	* BreakStatement
+	* ReturnStatement 
   * 组合语句
-    *BlockStatement
-	*IfStatement
-	*SwitchStatement
-	*IterationStatement (遍历)
-	*WithStatement (with(o){ o.x = 1})
-	*LabeledStatement (标签)
-	*TryStatement   
+    * BlockStatement
+	* IfStatement
+	* SwitchStatement
+	* IterationStatement (遍历)
+	* WithStatement (with(o){ o.x = 1})
+	* LabeledStatement (标签)
+	* TryStatement   
   * 声明
-    *FunctionDeclaration
-	*GeneratorDeclaration (*)
-	*AsyncFunctionDeclaration (async)
-	*AsyncGeneratorDeclaration (async *)
-	*VariableStament  (var, let, const)
-	*ClassDeclaration (class)
-	*LexicalDeclaration    
+    * FunctionDeclaration
+	* GeneratorDeclaration (*)
+	* AsyncFunctionDeclaration (async)
+	* AsyncGeneratorDeclaration (async *)
+	* VariableStament  (var, let, const)
+	* ClassDeclaration (class)
+	* LexicalDeclaration    
 * Runtime
   * Completion Record
     * [type]: normal break continue return throw
