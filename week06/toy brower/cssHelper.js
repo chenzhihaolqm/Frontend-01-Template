@@ -40,7 +40,7 @@ function compare(p1, p2) {
 }
 function addCSSRules(text){
     const ast = css.parse(text);
-    console.log(JSON.stringify(ast, null, '  '))
+    //console.log(JSON.stringify(ast, null, '  '))
     rules.push(...ast.stylesheet.rules);
     
 }

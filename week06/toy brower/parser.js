@@ -1,6 +1,6 @@
 const { addCSSRules, computeRules } = require('./cssHelper');
 const EOF = Symbol('EOF');
-const layout = require('./layout.js');
+// const layout = require('./layout.js');
 let currentToken = null;
 let currentAttributeName = '';
 let currentTextNode = null;
@@ -20,18 +20,20 @@ function emit(token) {
                 element.attributes[key] = token[key];
              }
         }
-        computeRules(stack,element);
+        // computeRules(stack,element);
         if(!token.isSelefClosing) {
             stack.push(element);
         }
         top.children.push(element);
         currentTextNode = null;
     } else if (token.type === 'endTag') {
+        computeRules(stack,stack[stack.length -1]);
         stack.pop();
         if(top.tagName === 'style'){
             addCSSRules(top.children[0].content);
         }
-        layout(top);
+       
+        // layout(top);
         currentTextNode = null;
     } else {
         if(!currentTextNode){
