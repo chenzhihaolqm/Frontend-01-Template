@@ -1,0 +1,182 @@
+<style>
+    .cell {
+        width:100px;
+        height:100px;
+        background-color: green;
+        display:inline-block;
+        border:solid 1px white;
+        vertical-align: middle;
+        line-height: 100px;
+        font-size: 50px;
+        text-align: center;
+    }
+
+</style>
+<body>
+    <div id='board'></div>
+</body>
+<script>
+let pattern =[
+    [0,0,0],
+    [0,0,0],
+    [0,0,0]
+]
+let flag=1
+function show(){
+        let board = document.getElementById("board");
+        board.innerHTML = "";
+        for(let i = 0; i < 3; i++){
+            for(let j = 0; j < 3; j++){
+                let cell = document.createElement("div");
+                cell.classList.add("cell");
+                cell.innerText = pattern[i][j] == 2 ? "❌" :
+                    pattern[i][j] == 1 ? "⭕️" : "";
+                cell.addEventListener("click", () => move(j, i));
+                board.appendChild(cell);
+            }
+            board.appendChild(document.createElement("br"))
+        }
+    }
+    function move(x,y){
+        if(pattern[y][x])return 
+        pattern[y][x]=flag
+        if(check(pattern,flag)){
+            alert(flag===2?"❌ is winner":"⭕️ is winner")
+
+        }
+        flag=3-flag
+        show(pattern)
+        // if(willWin(pattern,flag)){
+        //     console.log(flag===2?"❌ is winner":"⭕️ is winner")
+        // }
+        computeMove()
+    }
+    function computeMove(){
+        let choice = bestChoice(pattern,flag);
+        if(choice.point){
+            pattern[choice.point[1]][choice.point[0]]=flag
+        }
+        if(check(pattern,flag)){
+            alert(flag===2?"❌ is winner":"⭕️ is winner")
+
+        }
+        flag=3-flag
+        show()
+    }
+    function clone(pattern){
+        return JSON.parse(JSON.stringify(pattern))
+    }
+    let openings = new Map()
+    openings.set([
+        [0,0,0],
+        [0,0,0],
+        [0,0,0]
+    ].toString()+"1",{
+        point:[1,1],
+        result:0
+    })
+    function bestChoice(pattern,flag){
+        if(openings.has(pattern.toString()+flag)){
+            return openings.get(pattern.toString()+flag)
+        }
+        let point = willWin(pattern,flag)
+        if(point){ 
+            return {
+                point:point,
+                result:1
+            }
+        }
+        let result=-1;
+        outer:for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if(pattern[i][j]!==0){
+                    continue
+                }           
+                let temp = clone(pattern)
+                temp[i][j]=flag
+                let oppsite = bestChoice(temp,3-flag)
+                if(-oppsite.result>=result){
+                    point= [j,i]
+                    result= -oppsite.result
+                }  
+                if(result===1){
+                    break outer
+                }   
+            }            
+        }
+        return {
+            point:point,
+            result:point?result:0
+        }
+    }
+    function willWin(pattern,flag){
+        for(let i=0;i<3;i++){
+            for(let j = 0;j<3;j++){
+                if(pattern[i][j]!==0){
+                    continue
+                }
+                let temp = clone(pattern)
+                temp[i][j]=flag
+                if(check(temp,flag)){
+                    // return true
+                    return [j,i]
+                }
+            }
+        }
+        // return false
+        return null
+    }
+    function check(pattern,flag){
+        for(let i=0;i<3;i++){
+            let win = true
+            for(let j=0;j<3;j++){
+                if(pattern[i][j]!==flag){
+                    win=false
+                    break
+                }
+            }
+            if(win){
+                return true
+            }
+        }
+        for(let i=0;i<3;i++){
+            let win = true
+            for(let j=0;j<3;j++){
+                if(pattern[j][i]!==flag){
+                    win=false 
+                    break
+                }
+            }
+            if(win){
+                return true
+            }
+        }
+        {
+            let win = true
+            for(let j=0;j<3;j++){
+                if(pattern[j][j]!==flag){
+                    win=false
+                    break
+                }
+            }
+            if(win){
+                return true
+            }
+        }
+        {
+            let win = true
+            for(let j=0;j<3;j++){
+                if(pattern[j][2-j]!==flag){
+                    win=false
+                    break
+                }
+            }
+            if(win){
+                return true
+            }
+        }
+        return false
+    }
+    show(pattern)
+
+</script>
