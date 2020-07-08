@@ -1,0 +1,69 @@
+<div id="container">
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+   文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+</div>
+<div id="dragable" style="display:inline-block;width:100px;height:100px;background:pink"></div>
+<script>
+	let $dragble = document.getElementById('dragable');
+	let baseX = 0, baseY = 0;
+
+	$dragble.addEventListener('mousedown', (downEvent)=> {
+	  let startX = downEvent.clientX, startY = event.clientY;
+	  let move = event => {
+		  let x = baseX + event.clientX - startX, y = baseY + event.clientY - startY;
+		  let range = nearst(event.clientX,  event.clientY);
+		  range.insertNode($dragble);
+		  //$dragble.style.transform = `translate(${x}px,${y}px)`
+	  }
+	  let up = event => {
+		  baseX = baseX + event.clientX - startX;
+		  baseY = baseY + event.clientY - startY;
+		  console.log('base', baseX, baseY);
+		  document.removeEventListener('mousemove', move);
+		  document.removeEventListener('mouseup', up);
+	  }
+	  document.addEventListener('mousemove', move);
+	  document.addEventListener('mouseup', up);
+	})
+	let $container = document.getElementById('container');
+	let textLen = $container.firstChild.textContent.length;
+	let ranges = [];
+	for(let i = 0; i < textLen; i++){
+		let range = document.createRange();
+		range.setStart($container.firstChild, i);
+		range.setEnd($container.firstChild, i);
+		ranges.push(range);
+	}
+	function nearst(x0, y0){
+		let nearst = null;
+		let distance = Infinity;
+		for(let range of ranges){
+			let {x, y} = range.getBoundingClientRect() || {};
+			if(!x || !y){
+			   continue;
+			}
+			let d = (x - x0) * (x - x0) + (y -y0) * (y -y0);
+			if(d < distance){
+			   distance = d;
+			   nearst = range;
+			}
+		}
+		return nearst
+	}
+	document.addEventListener('selectstart', event => event.preventDefault());
+   
+</script>
