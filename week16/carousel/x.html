@@ -1,0 +1,116 @@
+<html>
+  <head></head>
+  <style>
+      .carousel{
+          width: 500px;
+          height:300px;
+          margin: 0 auto;
+          outline: 1px solid blue;
+          white-space: nowrap;
+          overflow: hidden;
+      }
+      .carousel > img{
+          display: inline-block;
+          width: 500px;
+          height:300px;
+      }
+  </style>
+  <body>
+    <div id="container">
+
+    </div>
+    <script type="module">
+        import {Timeline, Animation, linear} from './animation.js'
+        import {cubicBezier} from './cubicBezier.js'
+        import {enableGesture} from './gesture.js'
+        
+        class Carousel {
+            constructor() {
+                this.root = null;
+                this.data = [];
+                this.timeoutId = null;
+            }
+            render(){
+                let fragment = document.createDocumentFragment();
+                this.root = document.createElement('div');
+                this.root.classList.add('carousel')
+                for(let src of this.data){
+                    var img = document.createElement('img');
+                    img.src = src;
+                    img.addEventListener('dragstart', event=>{
+                        event.preventDefault();
+                    })
+                    fragment.appendChild(img);
+                }
+                this.root.appendChild(fragment);
+
+                let position = 0;
+                let nextPic = () => {
+                    let nextPosition = (position + 1) % this.data.length;
+                    let current = this.root.childNodes[position];
+                    let next = this.root.childNodes[nextPosition];
+                    current.style.transform = `translateX(${-500 * position}px)`
+                    next.style.transform = `translateX(${500 -500 * nextPosition}px)`
+                    let tl = new Timeline;
+                    tl.add(new Animation(current.style, 'transform', -500 * position, -500 -500 * position, 1000 ,0, linear, v => `translateX(${v}px)`));
+                    tl.add(new Animation(next.style, 'transform', 500 -500 * nextPosition, -500 * nextPosition, 1000 ,0, linear, v => `translateX(${v}px)`));
+                    tl.start();
+                    position = nextPosition;
+                    this.timeoutId = setTimeout(nextPic, 6000)
+                }
+                nextPic();
+
+                enableGesture(this.root);
+                let dx = 0;
+                this.root.addEventListener('pan',(event) => {
+                    if(this.timeoutId){
+                        clearTimeout(this.timeoutId)
+                        this.timeoutId = null;
+                    }
+                    let lastPosition = (position - 1 + this.data.length) % this.data.length;
+                    let nextPosition = (position + 1) % this.data.length;
+                    let current = this.root.childNodes[position];
+                    let last = this.root.childNodes[lastPosition];
+                    let next = this.root.childNodes[nextPosition];
+                    dx = event.clientX - event.startX;
+                    console.log(lastPosition, position, nextPosition);
+                    current.style.transform = `translateX(${dx -500 * position}px)`    // 1
+                    last.style.transform = `translateX(${dx -500 -500 * lastPosition}px)` // 1
+                    next.style.transform = `translateX(${dx + 500 -500 * nextPosition}px)` // 2
+                })
+                this.root.addEventListener('panend', event => {
+                    this.timeoutId = setTimeout(nextPic, 6000)
+                    let lastPosition = (position - 1 + this.data.length) % this.data.length;
+                    let nextPosition = (position + 1) % this.data.length;
+                    let current = this.root.childNodes[position];
+                    let last = this.root.childNodes[lastPosition];
+                    let next = this.root.childNodes[nextPosition];
+                    let offset = 0;
+                    if(event.clientX - event.startX > 250){
+                        offset = 1;
+                    } else if (event.clientX - event.startX < -250){
+                        offset = -1;
+                    }
+                    let tl = new Timeline;
+                    tl.add(new Animation(current.style, 'transform', dx -500 * position, offset * 500 -500 * position, 1000 ,0, linear, v => `translateX(${v}px)`));
+                    tl.add(new Animation(last.style, 'transform', dx -500 -500 * lastPosition, offset * 500 -500 -500 * lastPosition, 1000 ,0, linear, v => `translateX(${v}px)`));
+                    tl.add(new Animation(next.style, 'transform', dx + 500 -500 * nextPosition, offset * 500 + 500 -500 * nextPosition, 1000 ,0, linear, v => `translateX(${v}px)`));
+                    tl.start();
+                    position = (position - offset + this.data.length) % this.data.length;
+                    console.log(position)
+                })
+
+            }
+        }
+        let carousel = new Carousel();
+        carousel.data = [
+            "https://static001.geekbang.org/resource/image/bb/21/bb38fb7c1073eaee1755f81131f11d21.jpg",
+            "https://static001.geekbang.org/resource/image/1b/21/1b809d9a2bdf3ecc481322d7c9223c21.jpg",
+            "https://static001.geekbang.org/resource/image/b6/4f/b6d65b2f12646a9fd6b8cb2b020d754f.jpg",
+            "https://static001.geekbang.org/resource/image/73/e4/730ea9c393def7975deceb48b3eb6fe4.jpg",
+        ];
+        carousel.render();
+        document.getElementById('container').appendChild(carousel.root)
+    </script>
+  </body>
+</html>

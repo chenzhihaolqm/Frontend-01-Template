@@ -1,0 +1,61 @@
+<body>
+    <div id="my" style="opacity:.5;width:100px;height:100px;background:skyblue"></div>
+</body>
+<style>
+    *{
+        margin:0;
+        padding:0;
+    }
+</style>
+<script src="./gesture.js"></script>
+<script>
+    // clientWidth=width(样式中设置的)+左右padding-垂直滚动条宽度。
+    // clientHeight=height+上下padding-水平滚动条宽度。
+    // offsetWidth=width(样式中设置的)+左右padding+左右border
+    // offsetHeight=height(样式中设置的)+上下padding+上下border
+    window.addEventListener('contextmenu', event =>{
+        event.preventDefault()
+    });
+    document.addEventListener('selectstart', event => event.preventDefault())
+    document.addEventListener('touchmove', event => event.preventDefault, {passive:false})
+    let my = document.getElementById('my');
+    enableGesture(my);
+    let x = 0, y = 0;
+    var w = window.innerWidth
+    || document.documentElement.clientWidth
+    || document.body.clientWidth;
+
+    var h = window.innerHeight
+    || document.documentElement.clientHeight
+    || document.body.clientHeight;
+    my.addEventListener('pan',(event)=>{
+        let {dx, dy} = correct(event);
+        
+        my.style.transform = `translate(${dx}px, ${dy}px)`;    
+    })
+    my.addEventListener('panend',(event)=>{
+        let {dx, dy} = correct(event);
+        x = dx,
+        y = dy;  
+        console.log(dx,dy);
+    })
+
+    function correct(event){
+        let dx = x + event.clientX - event.startX,
+            dy = y + event.clientY - event.startY;
+        if(dx < 0)
+          dx = 0;  
+        if(dy < 0)
+          dy = 0;  
+        if(dx + my.offsetWidth > w){
+            dx = w - my.offsetWidth;
+        }   
+        if(dy + my.offsetHeight > h){
+            dy = h - my.offsetHeight;
+        }
+        return {
+            dx, dy
+        }
+    }
+
+</script>
