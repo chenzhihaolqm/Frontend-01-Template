@@ -112,7 +112,6 @@ export function enableGesture(element){
                     speed,
                     isFlick
                 });
-                return;
             }
             dispatchEvent('panend', point, context, {
                 speed,
