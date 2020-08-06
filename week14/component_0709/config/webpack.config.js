@@ -4,7 +4,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack'); // 用于访问内置插件
 
 module.exports = {
-    entry: path.resolve('./src/index.js'),
+    entry: path.resolve('./src/ListView.js'),
     output: {
         path: path.resolve(__dirname, '../dist'),
         filename: '[name].[hash].js'
@@ -33,6 +33,10 @@ module.exports = {
                         ]
                     ]
                 },
+            },
+            {
+                test: /\.css$/, // 匹配文件路径的正则表达式，通常我们都是匹配文件类型后缀
+                loader: require.resolve('../loader/cssloader.js'), // 指定使用的 loader
             },
         ]
     },
