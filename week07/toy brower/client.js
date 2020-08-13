@@ -23,11 +23,10 @@
 		}
 		toString() {
 			const json = `${this.method} / HTTP/1.1\r
-${Object.keys(this.headers).map(key => {
-	return `${key}:${this.headers[key]}`
-}).join('\r\n')}\r
-\r
-${this.bodyText}`;
+			${Object.keys(this.headers).map(key => {
+				return `${key}:${this.headers[key]}`
+			}).join('\r\n')}\r\r
+			${this.bodyText}`;
 			return json;
 		}
 		send() {
